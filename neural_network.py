@@ -10,15 +10,12 @@ def function_handler(parameters, input_data):
     return list(map(parameters['func'], input_data))
 
 
-def add_handler(name, handler):
-    _handlers[name] = handler
-
-
-def pop_handler(name):
-    _handlers.pop(name)
-
-
 _handlers = {'linear': linear_handler, 'function': function_handler}
+
+
+def require_parameters(*required_parameters, actual_parameters):
+    for param in required_parameters:
+        assert param in actual_parameters, '\'{}\' is required'.format(param)
 
 
 class layer:
@@ -40,7 +37,20 @@ class neural_network:
         self._layers = []
 
     def add_layer(self, l_type, **l_data):
+        assert l_type in _handlers, '\'{}\' is missing in handlers dictionary'.format(l_type)
+        if l_type == 'function':
+            require_parameters('func', actual_parameters=l_data)
+        elif l_type == 'linear':
+            require_parameters('matrix', 'bias', actual_parameters=l_data)
         self._layers.append(layer(handler=_handlers[l_type], parameters=l_data))
+
+    def add_function_layer(self, **l_data):
+        require_parameters('func', actual_parameters=l_data)
+        self._layers.append(layer(handler=function_handler, parameters=l_data))
+
+    def add_linear_layer(self, **l_data):
+        require_parameters('matrix', 'bias', actual_parameters=l_data)
+        self._layers.append(layer(handler=linear_handler, parameters=l_data))
 
     def check_dimensions(self):
         try:

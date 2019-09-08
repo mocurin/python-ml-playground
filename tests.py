@@ -35,8 +35,8 @@ class NeuralNetworkTest(unittest.TestCase):
         nn.add_layer('linear', matrix=[[1, -1],
                                        [-1, 1]], bias=[0, 0])
         nn.add_layer('function', func=threshold)
-        nn.add_layer('linear', matrix=[[1, 1]], bias=[0])
-        nn.add_layer('function', func=threshold)
+        nn.add_linear_layer(matrix=[[1, 1]], bias=[0])
+        nn.add_function_layer(func=threshold)
         self.assertTrue(nn.check_dimensions())
         self.assertEqual(nn([0, 0]), [0])
         self.assertEqual(nn([0, 1]), [1])
@@ -46,3 +46,4 @@ class NeuralNetworkTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
