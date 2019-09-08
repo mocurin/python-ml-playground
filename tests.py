@@ -43,6 +43,6 @@ class NeuralNetworkTest(unittest.TestCase):
         self.assertEqual(nn([1, 0]), [1])
         self.assertEqual(nn([1, 1]), [0])
 
+
 if __name__ == '__main__':
     unittest.main()
-
