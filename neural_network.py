@@ -46,11 +46,11 @@ class neural_network:
 
     def add_function_layer(self, **layer_data):
         require_parameters(layer_data, 'func')
-        self._layers.append(layer(handler=_handlers['function'], parameters=layer_data))
+        self._layers.append(layer(handler=function_handler, parameters=layer_data))
 
     def add_linear_layer(self, **layer_data):
         require_parameters(layer_data, 'matrix', 'bias')
-        self._layers.append(layer(handler=_handlers['linear'], parameters=layer_data))
+        self._layers.append(layer(handler=linear_handler, parameters=layer_data))
 
     def check_dimensions(self):
         try:
