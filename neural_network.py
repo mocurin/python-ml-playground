@@ -13,9 +13,9 @@ def function_handler(parameters, input_data):
 _handlers = {'linear': linear_handler, 'function': function_handler}
 
 
-def require_parameters(*required_parameters, actual_parameters):
+def require_parameters(actual_parameters, *required_parameters):
     for param in required_parameters:
-        assert param in actual_parameters, '\'{}\' is required'.format(param)
+        assert param in actual_parameters, '"{}" is required'.format(param)
 
 
 class layer:
@@ -36,21 +36,21 @@ class neural_network:
         self._shape = self._input, self._output = input_count, output_count
         self._layers = []
 
-    def add_layer(self, l_type, **l_data):
-        assert l_type in _handlers, '\'{}\' is missing in handlers dictionary'.format(l_type)
-        if l_type == 'function':
-            require_parameters('func', actual_parameters=l_data)
-        elif l_type == 'linear':
-            require_parameters('matrix', 'bias', actual_parameters=l_data)
-        self._layers.append(layer(handler=_handlers[l_type], parameters=l_data))
+    def add_layer(self, layer_type, **layer_data):
+        assert layer_type in _handlers, '"{}" is missing in handlers dictionary'.format(layer_type)
+        if layer_type == 'function':
+            require_parameters(layer_data, 'func')
+        elif layer_type == 'linear':
+            require_parameters(layer_data, 'matrix', 'bias')
+        self._layers.append(layer(handler=_handlers[layer_type], parameters=layer_data))
 
-    def add_function_layer(self, **l_data):
-        require_parameters('func', actual_parameters=l_data)
-        self._layers.append(layer(handler=function_handler, parameters=l_data))
+    def add_function_layer(self, **layer_data):
+        require_parameters(layer_data, 'func')
+        self._layers.append(layer(handler=_handlers['function'], parameters=layer_data))
 
-    def add_linear_layer(self, **l_data):
-        require_parameters('matrix', 'bias', actual_parameters=l_data)
-        self._layers.append(layer(handler=linear_handler, parameters=l_data))
+    def add_linear_layer(self, **layer_data):
+        require_parameters(layer_data, 'matrix', 'bias')
+        self._layers.append(layer(handler=_handlers['linear'], parameters=layer_data))
 
     def check_dimensions(self):
         try:
